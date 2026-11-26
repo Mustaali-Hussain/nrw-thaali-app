@@ -1,0 +1,803 @@
+/*
+ * NRW Thaali — Design System
+ * ===========================
+ * Every value here is extracted from the interactive prototype.
+ * This is the single source of truth for the entire app.
+ *
+ * RULE: If a component needs a color, size, or spacing — it comes
+ * from here, not from inline styles or component-level CSS.
+ */
+
+/* ─── Font ─── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ─────────────────────────────────────────────
+   1. DESIGN TOKENS (CSS Custom Properties)
+
+   Why custom properties? They let us define values once
+   and reuse them everywhere. If the community wants to
+   change the brand green, we change ONE line.
+   ───────────────────────────────────────────── */
+
+:root {
+  /* Brand */
+  --primary: #1B7A4A;
+  --primary-light: #E8F5EE;    /* light green bg for selected states */
+  --primary-lighter: #F0FDF4;  /* even lighter green bg */
+
+  /* Background & Surface */
+  --bg: #FAFAF7;               /* page background — warm off-white */
+  --surface: #FFFFFF;           /* cards, inputs, nav */
+  --surface-hover: #F9FAFB;    /* card :active / hover state */
+  --surface-disabled: #F3F4F6; /* disabled inputs, readonly fields */
+
+  /* Text hierarchy — from darkest to lightest */
+  --text-primary: #1A1A1A;     /* headings, main content */
+  --text-dark: #374151;        /* input labels, secondary headings */
+  --text-secondary: #6B7280;   /* descriptions, labels, section titles */
+  --text-muted: #9CA3AF;       /* placeholders, inactive nav, timestamps */
+
+  /* Borders */
+  --border: #E5E7EB;           /* cards, back button, dividers */
+  --border-light: #F3F4F6;     /* bottom nav top border */
+  --border-input: #D1D5DB;     /* input fields — slightly darker for visibility */
+
+  /* Role colors — each role has: main, dark (text), bg */
+  --admin: #DC2626;
+  --admin-dark: #DC2626;       /* same for admin */
+  --admin-bg: #FEE2E2;
+
+  --user-role: #D97706;
+  --user-dark: #92400E;
+  --user-bg: #FEF3C7;
+
+  --khidmat: #7C3AED;
+  --khidmat-dark: #5B21B6;
+  --khidmat-bg: #EDE9FE;
+
+  /* Status colors */
+  --error: #DC2626;
+  --error-bg: #FEE2E2;
+  --error-bg-light: #FEF2F2;
+
+  --warning: #D97706;
+  --warning-accent: #F59E0B;
+  --warning-dark: #92400E;
+  --warning-bg: #FEF3C7;
+  --warning-bg-light: #FFFBEB;
+  --warning-border: #FDE68A;
+
+  --success: var(--primary);
+  --success-bg: var(--primary-light);
+
+  /* Accent colors (budget page) */
+  --income-light: #86EFAC;
+  --income-accent: #4ADE80;
+  --expense-light: #FCA5A5;
+  --expense-accent: #F87171;
+}
+
+
+/* ─────────────────────────────────────────────
+   2. RESET & BASE
+
+   We strip browser defaults so every element
+   starts from zero. This prevents surprises
+   like unexpected margins on <h1> or <p>.
+   ───────────────────────────────────────────── */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* removes blue flash on mobile tap */
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100dvh;          /* dvh = dynamic viewport height, respects mobile browser chrome */
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ─────────────────────────────────────────────
+   3. LAYOUT
+
+   .scroll-container: matches prototype's main
+   scroll area (padding: 0 24px).
+
+   .header: top section of each screen.
+   ───────────────────────────────────────────── */
+
+.scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.page-header {
+  padding: 0 24px 20px;
+  flex-shrink: 0;
+}
+
+/* Status bar spacer (top safe area for PWA standalone mode) */
+.status-bar {
+  height: 48px;
+  flex-shrink: 0;
+}
+
+/* Page that has bottom navigation needs padding at bottom */
+.page-with-nav {
+  padding-bottom: 80px;
+}
+
+
+/* ─────────────────────────────────────────────
+   4. TYPOGRAPHY
+
+   Named classes for consistent text sizing.
+   Every font-size here matches the prototype.
+   ───────────────────────────────────────────── */
+
+/* Page title — "Dashboard", "Profile", etc. */
+.text-page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Sub-page title — "Weekly Menu", etc. */
+.text-sub-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Section headers — "MANAGE", "OPT FOR THAALI" */
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+/* Small labels above fields or stats */
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+
+/* ─────────────────────────────────────────────
+   5. CARDS
+
+   The prototype uses TWO card types:
+
+   .card — compact, used for list items
+     padding: 16px, border-radius: 12px
+     border: 1px solid, NO box-shadow
+
+   .field-card — spacious, used for form sections
+     padding: 20px, border-radius: 14px
+     border: 1px solid
+
+   KEY DIFFERENCE from old CSS:
+   The prototype uses border, NOT box-shadow!
+   ───────────────────────────────────────────── */
+
+.card {
+  padding: 16px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:active {
+  background: var(--surface-hover);
+}
+
+.field-card {
+  padding: 20px;
+  background: var(--surface);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+
+/* ─────────────────────────────────────────────
+   6. BUTTONS
+
+   .btn — full-width, 14px padding, 10px radius
+
+   NOTE: prototype uses border-radius: 10px for
+   buttons (not 8px or 12px).
+   ───────────────────────────────────────────── */
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.15s ease;
+}
+
+.btn:active {
+  opacity: 0.85;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.btn-danger-outline {
+  background: var(--surface);
+  color: var(--error);
+  border: 1.5px solid var(--expense-light);
+}
+
+
+/* ─────────────────────────────────────────────
+   7. FORM INPUTS
+
+   Login inputs are slightly different from
+   in-app inputs:
+
+   Login:  padding 14px 16px, radius 10px,
+           border #D1D5DB, bg white, font 15px
+
+   In-app: padding 10px 14px, radius 8px,
+           border #E5E7EB, bg var(--bg), font 14px
+   ───────────────────────────────────────────── */
+
+/* Default in-app input */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--bg);
+  outline: none;
+  color: var(--text-primary);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+}
+
+textarea {
+  resize: none;
+  min-height: 70px;
+}
+
+/* Input group — label + input pair */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+
+/* ─────────────────────────────────────────────
+   8. BADGES & CHIPS
+
+   Badges: status indicators (small, inline)
+   Chips: toggleable selections (opt-in items)
+   ───────────────────────────────────────────── */
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* Common badge variants */
+.badge-success {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.badge-warning {
+  background: var(--warning-bg);
+  color: var(--warning-dark);
+}
+
+.badge-error {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.chip {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1.5px solid;
+}
+
+.chip-selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.chip-unselected {
+  background: var(--surface-hover);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+
+/* ─────────────────────────────────────────────
+   9. STAT CARDS
+
+   Used in Admin Dashboard — three cards in a row.
+   ───────────────────────────────────────────── */
+
+.stat {
+  flex: 1;
+  padding: 14px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+
+/* ─────────────────────────────────────────────
+   10. NAVIGATION
+
+   .back-btn: 36×36px square button for sub-pages
+   .bottom-nav: fixed bottom tab bar
+   .nav-item: individual tab (icon + 10px label)
+   ───────────────────────────────────────────── */
+
+.back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.back-btn:active {
+  background: var(--surface-disabled);
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 24px 28px;
+  background: var(--surface);
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.nav-item p,
+.nav-item span {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.nav-item.active p,
+.nav-item.active span {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.nav-item svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Safe area for notched phones (iPhone etc.) */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .bottom-nav {
+    padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   11. QUICK ACTIONS
+
+   Icon buttons on the User Home screen.
+   48×48px icon circle with colored background.
+   ───────────────────────────────────────────── */
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.quick-action:active {
+  opacity: 0.7;
+}
+
+.qa-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-action p {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+
+/* ─────────────────────────────────────────────
+   12. OPT-IN CARDS
+
+   Toggle cards for opting into thaali days.
+   ───────────────────────────────────────────── */
+
+.optin-card {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.optin-active {
+  background: var(--primary-lighter);
+  border-color: var(--primary);
+}
+
+.optin-inactive {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+
+/* ─────────────────────────────────────────────
+   13. ZONE & COLLECTION COMPONENTS
+   ───────────────────────────────────────────── */
+
+.zone-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.zone-selected {
+  background: var(--primary-lighter);
+  border-color: var(--primary);
+}
+
+.zone-unselected {
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+
+.collect-zone {
+  padding: 14px 16px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+
+
+/* ─────────────────────────────────────────────
+   14. TOGGLE SWITCH
+   ───────────────────────────────────────────── */
+
+.toggle {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+  border: none;
+}
+
+.toggle.on {
+  background: var(--primary);
+}
+
+.toggle.off {
+  background: var(--border-input);
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  top: 2px;
+  transition: left 0.2s;
+}
+
+.toggle.on::after {
+  left: 22px;
+}
+
+.toggle.off::after {
+  left: 2px;
+}
+
+
+/* ─────────────────────────────────────────────
+   15. USER LIST ROW
+   ───────────────────────────────────────────── */
+
+.user-row {
+  padding: 14px 16px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.user-row:active {
+  background: var(--surface-hover);
+}
+
+
+/* ─────────────────────────────────────────────
+   16. FEEDBACK CRITERIA BUTTONS
+   ───────────────────────────────────────────── */
+
+.criteria-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.criteria-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.criteria-btn.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.criteria-btn.selected-warn {
+  border-color: var(--warning-accent);
+  background: var(--warning-bg);
+  color: var(--warning-dark);
+}
+
+.criteria-btn:active {
+  opacity: 0.8;
+}
+
+
+/* ─────────────────────────────────────────────
+   17. COOK ZONE (Khidmatguzar view)
+   ───────────────────────────────────────────── */
+
+.cook-zone {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.cook-zone:active {
+  background: var(--surface-hover);
+}
+
+.cook-zone.cook-selected {
+  border-color: var(--primary);
+  background: var(--primary-lighter);
+}
+
+.cook-zone.cook-taken {
+  border-color: var(--warning-accent);
+  background: var(--warning-bg-light);
+}
+
+
+/* ─────────────────────────────────────────────
+   18. LOADING & FEEDBACK
+   ───────────────────────────────────────────── */
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.3); }
+}
+
+/* Error message box */
+.error-box {
+  background: var(--error-bg-light);
+  color: var(--error);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Warning/info banner */
+.info-banner {
+  padding: 12px 16px;
+  border-radius: 10px;
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.info-banner-warning {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-dark);
+}
+
+
+/* ─────────────────────────────────────────────
+   19. RESPONSIVE — Desktop admin widening
+
+   Mobile-first: everything above targets phones.
+   On wider screens, we cap the layout and add
+   some breathing room for admin views.
+   ───────────────────────────────────────────── */
+
+@media (min-width: 768px) {
+  .scroll-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .bottom-nav {
+    max-width: 600px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 1024px) {
+  .admin-layout .scroll-container {
+    max-width: 800px;
+  }
+}
