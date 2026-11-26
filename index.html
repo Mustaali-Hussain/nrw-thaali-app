@@ -10,12 +10,25 @@
   <link rel="apple-touch-icon" href="/icon-192.png" />
   <title>NRW Thaali</title>
   <style>
-    [data-netlify-drawer], .netlify-badge, #netlify-identity-widget,
-    .netlify-identity-menu, iframe[title*="netlify"] { display: none !important; }
+    #nl-badge-frame, [data-netlify-drawer], .netlify-badge,
+    #netlify-identity-widget, iframe[title*="Netlify"] { display: none !important; }
   </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="module" src="/src/main.jsx"></script>
+<script>
+  window.addEventListener('load', function() {
+    var el = document.getElementById('nl-badge-frame');
+    if (el) el.remove();
+    new MutationObserver(function(m) {
+      m.forEach(function(r) {
+        r.addedNodes.forEach(function(n) {
+          if (n.id === 'nl-badge-frame') n.remove();
+        });
+      });
+    }).observe(document.body, { childList: true });
+  });
+</script>
 </body>
 </html>
