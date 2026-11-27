@@ -143,16 +143,12 @@ export default function EditUser() {
     setDeleting(true)
     setError('')
     try {
-      // Delete from users table (RLS should allow admin)
-      const { error: delErr } = await supabase
-          .from('users')
-          .delete()
-          .eq('id', id)
+      // Delete from both users table AND auth.users via DB function
+      const { error: delErr } = await supabase.rpc('delete_user_fully', {
+        target_user_id: id,
+      })
 
       if (delErr) throw delErr
-
-      // Note: deleting the auth.users entry requires admin API / Edge Function.
-      // The profile row is removed; the auth entry will be orphaned but harmless.
 
       navigate(-1)
     } catch (err) {

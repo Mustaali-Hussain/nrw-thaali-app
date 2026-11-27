@@ -274,7 +274,7 @@ export default function CookingKhidmat() {
 
                                       {/* Collecting volunteers for this zone */}
                                       {isOpen && collectors[city] && collectors[city].length > 0 && (
-                                          <div style={{ padding: '6px 12px 8px', background: '#F0FAF4', margin: '0 8px', borderRadius: 8, marginBottom: 6 }}>
+                                          <div style={{ padding: '6px 12px 8px', background: '#F0FAF4', margin: '0 8px', borderRadius: 8, marginTop: 10, marginBottom: 6 }}>
                                             <span style={{ fontSize: 10, fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: 0.3 }}>📦 Collecting</span>
                                             <div style={{ marginTop: 3 }}>
                                               {collectors[city].map((name, ni) => (
