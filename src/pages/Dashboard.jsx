@@ -40,9 +40,9 @@ const mainBadge = { bg: '#E8F5EE', color: '#3A9B68' }
  * Sat–Sun: menus hidden entirely
  */
 function getThaaliPhase() {
-  const day = new Date().getDay() // 0=Sun … 6=Sat
-  if (day === 0 || day === 6) return 'hidden'
-  if (day >= 4) return 'locked'
+  // const day = new Date().getDay() // 0=Sun … 6=Sat
+  // if (day === 0 || day === 6) return 'hidden'
+  // if (day >= 4) return 'locked'
   return 'open'
 }
 
