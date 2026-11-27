@@ -270,8 +270,8 @@ export default function CollectionSettings() {
                         placeholder="e.g. Musterstraße 12, 44135"
                     />
                   </div>
-                  <div style={{ display: 'flex', gap: 10 }}>
-                    <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', gap: 10, overflow: 'hidden' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={styles.label}>Start Time</p>
                       <input
                           type="time"
@@ -280,7 +280,7 @@ export default function CollectionSettings() {
                           onChange={e => set(city, 'start', e.target.value)}
                       />
                     </div>
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={styles.label}>End Time</p>
                       <input
                           type="time"
@@ -401,6 +401,8 @@ const styles = {
   },
   input: {
     width: '100%',
+    minWidth: 0,
+    maxWidth: '100%',
     padding: '10px 14px',
     borderRadius: 8,
     border: '1.5px solid var(--border)',
@@ -410,6 +412,7 @@ const styles = {
     background: 'white',
     outline: 'none',
     boxSizing: 'border-box',
+    WebkitAppearance: 'none',
   },
   submitBtn: {
     width: '100%',

@@ -48,7 +48,7 @@ export default function Login() {
 
         {/* App name & tagline */}
         <h1 className="login-title">NRW Thaali</h1>
-        <p className="login-subtitle">Community food distribution</p>
+        <p className="login-subtitle">Faiz al-Mawaid al-Burhaniyah</p>
 
         {/* Login form */}
         <form onSubmit={handleSubmit} className="login-form">
